@@ -10,12 +10,5 @@ const rangeValue = document.querySelector('.rollback').querySelector('.range-val
 const inputs = document.getElementsByClassName('total-input');
 let screens = document.querySelectorAll('.screen ');
 
-console.log(title);
-console.log(buttons);
-console.log(addButton);
-console.log(items1);
-console.log(items2);
-console.log(range);
-console.log(rangeValue);
-console.log(inputs);
-console.log(screens);
+
+
