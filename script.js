@@ -17,6 +17,9 @@ const totalCountOther = document.getElementsByClassName('total-input')[2];
 const fullTotalCount = document.getElementsByClassName('total-input')[3];
 const TotalCountRollBack = document.getElementsByClassName('total-input')[4];
 
+const input = document.querySelector('#input');
+const select = document.querySelector('#select');
+
 let screens = document.querySelectorAll('.screen ');
 
 const appData = {
@@ -34,12 +37,13 @@ const appData = {
     servicesPercent: {},
     servicesNumber: {},
     init: function() {
-        appData.addTitle();
+        this.addTitle();
         startBtn.disabled = true;
-        appData.buttonBlock();
-        startBtn.addEventListener('click', appData.start);
-        buttonPlus.addEventListener('click', appData.addScreenBlock);
-        appData.rollback();
+        this.buttonBlock();
+        startBtn.addEventListener('click', this.start);
+        buttonPlus.addEventListener('click', this.addScreenBlock);
+        resetBtn.addEventListener('click', this.reset),
+        this.rollback();
     },
     addTitle: function() {
         document.title = title.textContent;
@@ -48,10 +52,30 @@ const appData = {
         appData.addScreens();
         appData.addServices();
         appData.addPrices();
+        appData.inputBlock();
 
         // appData.logger();
         appData.showResult();
         console.log(appData);
+    },
+
+    inputBlock: function() {
+        startBtn.style.display = 'none';
+        resetBtn.style.display = 'flex';
+
+        input.disabled = true;
+        select.disabled = true;
+    },
+
+    reset: function() {
+        startBtn.style.display = 'flex';
+        resetBtn.style.display = 'none';
+
+        input.disabled = false;
+        select.disabled = false;
+
+        appData.clearResult();
+        appData.deleteScreens();
     },
 
     buttonBlock: function() {
@@ -59,7 +83,7 @@ const appData = {
         const select = document.querySelector('select');
         const input = document.querySelector('.screen input');
 
-        block.addEventListener('change', function() {
+        block.addEventListener('change', () => {
             if (input.value != '' && select.value != '') {
                 startBtn.disabled = false;
             }
@@ -74,10 +98,18 @@ const appData = {
         TotalCountRollBack.value = appData.totalRollback;
 
     },
+
+    clearResult: function() {
+        total.value = '';
+        totalCountOther.value = '';
+        fullTotalCount.value = '';
+        totalCount.value = '';
+        TotalCountRollBack.value = '';
+    },
     addScreens: function() { 
         screens = document.querySelectorAll('.screen ');
 
-        screens.forEach(function(screen, index) {
+        screens.forEach((screen, index) => {
             const select = screen.querySelector('select');
             const input = screen.querySelector('input');
             const selectName = select.options[select.selectedIndex].textContent;
@@ -90,7 +122,7 @@ const appData = {
             });
             console.log(select);
 
-            select.addEventListener('change', function(event) {
+            select.addEventListener('change', (event) => {
                 console.log(this.value);
                 if (this.value != '') {
                     console.log(this.value);
@@ -102,8 +134,12 @@ const appData = {
         console.log(appData.screens);
     },
 
+    deleteScreens: function() {
+        appData.screens = 0;
+    },
+
     addServices: function() {
-        otherItemsPercent.forEach(function(item) {
+        otherItemsPercent.forEach((item) => {
             const check = item.querySelector('input[type=checkbox]');
             const label = item.querySelector('label');
             const input = item.querySelector('input[type=text]');
@@ -129,12 +165,12 @@ const appData = {
             if (check.checked) {
                 appData.servicesNumber[label.textContent] = +input.value;
             }
-            console.log(appData);
+            // console.log(appData);
         })
     },
 
     rollback: function() {
-        inputRange.addEventListener('input', function() {
+        inputRange.addEventListener('input', () => {
             inputRangeValue.textContent = inputRange.value;
             appData.rollback = inputRange.value;
         })
@@ -142,6 +178,7 @@ const appData = {
 
     addScreenBlock: function(){
         const cloneScreen = screens[0].cloneNode(true);
+        cloneScreen.querySelector('input').value = '';
 
         screens[screens.length - 1].after(cloneScreen);
     },
